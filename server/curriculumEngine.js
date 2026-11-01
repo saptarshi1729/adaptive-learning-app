@@ -10,12 +10,12 @@ import { sanitizeCardLinks } from "./linkValidator.js";
 
 // Initialize Firebase SDK for Cloud Firestore in Node.js
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY || "AIzaSyAhWrBmUMKw60i23Fp5aLHXh2gyYB6aDcc",
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN || "gen-lang-client-0428058346.firebaseapp.com",
-  projectId: process.env.FIREBASE_PROJECT_ID || "gen-lang-client-0428058346",
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "gen-lang-client-0428058346.firebasestorage.app",
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || "776546340400",
-  appId: process.env.FIREBASE_APP_ID || "1:776546340400:web:8b4f2a2a724be9c2a667f5"
+  apiKey: process.env.FIREBASE_API_KEY || "",
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN || "",
+  projectId: process.env.FIREBASE_PROJECT_ID || "",
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: process.env.FIREBASE_APP_ID || ""
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
