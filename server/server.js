@@ -1,15 +1,15 @@
 // server/server.js
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { 
+  getDailyBriefingAndQuiz,
   generateDailySession, 
   generateHistoricalSummary, 
   generateDailySynthesis,
   recommendTomorrowFocus,
-  TOPIC_CURRICULUM_DATABASE,
   countWords 
 } from './curriculumEngine.js';
-import { sanitizeCardLinks } from './linkValidator.js';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -51,11 +51,12 @@ app.get('/api/topics', (req, res) => {
 
   res.json({
     tracks,
-    totalTopics: TOPIC_CURRICULUM_DATABASE.length
+    dynamicAiEngine: "Google Gemini 1.5 Flash (@google/generative-ai)",
+    caching: "Cloud Firestore daily_sessions"
   });
 });
 
-// Generate or fetch daily session
+// Generate or fetch daily session with Firestore caching & live Gemini AI
 app.post('/api/generate-daily', async (req, res) => {
   try {
     const { date, preferences = {}, completedSessions = [] } = req.body;
@@ -63,14 +64,11 @@ app.post('/api/generate-daily', async (req, res) => {
     // Default to current date in IST if not provided
     const userDate = date || new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
     
-    const session = generateDailySession({
-      dateString: userDate,
+    const session = await getDailyBriefingAndQuiz({
+      date: userDate,
       preferences,
       completedSessions
     });
-
-    // Automatically validate and sanitize all deeper dive links
-    session.cards = await sanitizeCardLinks(session.cards);
 
     const historySummary = generateHistoricalSummary(completedSessions);
 
